@@ -1,5 +1,5 @@
 # Contains all of the reference functions used in different notebooks 
-# (prototyping of these functions are present in Reference.ipynb)
+# (prototyping of these functions present in Reference.ipynb)
 
 # Reference function 1
 # get_file_names(col_names, df_ref)

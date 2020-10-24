@@ -40,6 +40,7 @@ def get_file_names(col_names, df_ref):
 # Returns: Histplot of the value_counts of the columns
 
 def get_histplot(col_name, df_ref, label):
+    print('No. of unique IDEHR: ', len(df_ref[['IDEHR', col_name]].dropna().IDEHR.unique()))
     plt.rcParams['figure.figsize'] = [15, 8]
     matplotlib.rcParams.update({'font.size': 15})
     plt.figure()
@@ -48,4 +49,5 @@ def get_histplot(col_name, df_ref, label):
     ax.set_title(label)
     ax.set_xlabel('No. of observations')
     ax.set_ylabel('No. of IDEHRs')
+    plt.grid()
     plt.show()

@@ -51,3 +51,19 @@ def get_histplot(col_name, df_ref, label):
     ax.set_ylabel('No. of IDEHRs')
     plt.grid()
     plt.show()
+
+# Reference function 3
+# get_scatter_marker_size(col_array, min_size, max_size)
+#
+# Purpose: Returns a resized scatter marker array given an array of data, scaled in the range [min_size, max_size]
+# 
+# Input: col_array: an array of data points
+#        min_size: desired area of the smallest point
+#        max_size: desired area of the largest point
+#
+# Returns: Array of marker sizes to be passed as the 's' argument to plt.scatter()
+
+def get_scatter_marker_size(col_array, min_size=10, max_size=1000):
+    c_min = np.min(col_array)
+    c_max = np.max(col_array)
+    return [((i - c_min) * (max_size - min_size) / (c_max - c_min)) + min_size for i in col_array]

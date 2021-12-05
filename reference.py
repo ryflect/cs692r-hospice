@@ -67,3 +67,26 @@ def get_scatter_marker_size(col_array, min_size=10, max_size=1000):
     c_min = np.min(col_array)
     c_max = np.max(col_array)
     return [((i - c_min) * (max_size - min_size) / (c_max - c_min)) + min_size for i in col_array]
+
+# get the co-effs of best fit for first and second order poly for a heatmap
+# Reference function 4
+# get_coeffs(dframe, n)
+#
+# Purpose: Returns the co-effs of best fit for first and second order poly for a heatmap data frame having n hos_weeks (or similar time unit along x)
+# 
+# Input: dframe: a data frame of the heatmap data
+#        n: no. of hos_week (or similar time unit along x)
+#
+# Returns: Data frame appended to heatmap data with co-effs (m, x2, x1)
+def get_coeffs(df_hm, n):
+    # correct way
+    dft = df_hm.apply(lambda x: np.polyfit(y=x, x=np.linspace(0, n, n+1), deg=1) if np.sum(np.isfinite(x)) == n+1 else 'undef', axis=1)
+    dft = dft.to_frame().rename(columns={0: 'deg1 (m)'})
+    dft['deg1 (m)'] = dft['deg1 (m)'].apply(lambda x: x if isinstance(x, str) else np.round(x[0], 2))
+    dft_2 = df_hm.apply(lambda x: np.polyfit(y=x, x=np.linspace(0, n, n+1) , deg=2) if np.sum(np.isfinite(x)) == n+1 else 'undef', axis=1).to_frame().rename(columns={0: 'deg2'})
+    dft_2 = dft_2['deg2'].apply(lambda x: ['undef', 'undef'] if isinstance(x, str) else x[0:2])
+    dft_2 = pd.DataFrame(dft_2.to_list(), columns=['deg2 (x2)', 'deg2 (x1)'], index=dft_2.index)
+    dft = pd.concat([dft, dft_2], axis=1)
+    dft['deg2 (x2)'] = dft['deg2 (x2)'].apply(lambda x: np.round(x, 2) if isinstance(x, float) else x)
+    dft['deg2 (x1)'] = dft['deg2 (x1)'].apply(lambda x: np.round(x, 2) if isinstance(x, float) else x)
+    return pd.concat([df_hm, dft], axis=1)  
